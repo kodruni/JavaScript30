@@ -17,6 +17,74 @@
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+const cities = [];
+
+// const prom = fetch(endpoint); --- fetch will return a promise
+// console.log(prom);
+
+// fetch(endpoint).then(blob => console.log(blob)); ---- fetch will return data but won't show what eaxctly it is, cuz it doesn't know (could be an image, audio etc.)
+//we know explicitly know that it is JSON, but raw data 'blob' must be converted into JSON first
+// if you try: 
+//fetch(endpoint).then(blob => blob); ---- it will show you that there's a methof json right in there
+//hence you can do this:
+
+fetch(endpoint)
+  .then(blob => blob.json())
+// --- another promise:
+// .then(data => console.log(data))
+// --- now, this gives you a massive array of cities
+
+//put that data into cities (use the spread operator to avoid arrray in an array), so re-write the above as this:
+  .then(data => cities.push(...data))
+
+//then, when you type into the box, we have to filter down this massive array to a subset that we can listen to
+function findMatches(wordToMatch, cities) {
+  return cities.filter(place => {
+    // here we need to figure out if the city or state matches what was searched
+    // a. putting a var into a reg expression -- need to create one outside of match() first:
+    const regex = new RegExp(wordToMatch, 'gi'); //g - global (will search through the entire string), i - insenstivie, i.e. lower and capital cases
+    return place.city.match(regex) || place.state.match (regex) 
+    //can put reg express but it would only be hardcoded, in our case it should change, hence regex var ( we use OR b/c it can be either a city or a state)
+    //test it: type in console findMatches('Bos', cities); and inspect 
+  });
+}
+
+// find a function to put commas in (for ex., from StackOverFlow)
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); //to display population
+}
+
+//now we need to create our display function -- will be called whenever the value changes (i.e. user input)
+function displayMatches() {
+  // console.log(this.value); 
+  const matchArray = findMatches(this.value, cities);
+  // console.log(matchArray);
+  //then loop over it
+  const html = matchArray.map(place => {
+    //how to highlight your input
+    const regex = new RegExp(this.value, 'gi'); //it will find whatever it matches in regex (whatever the user is trying to input)
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`); //and it will replace it with the span class highlight put in here and the value
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${ numberWithCommas(place.population)}</span>
+      </li>
+    `;
+  }).join(''); //join() turns an array of multiple items into one big string
+  suggestions.innerHTML = html;
+}
+
+const searchInput = document.querySelector('.search'); // then we gonna select input that we're working with (for that inspect elements &s choose the class for input, here it's 'search')
+const suggestions = document.querySelector('.suggestions'); //also the ul class 'suggestions'
+
+searchInput.addEventListener('change', displayMatches);
+//test it: type in the bar and click outside (b/c you need to go off of input) of it, look into console, it should display what you entered
+//you can switch 'change' to 'keyup', for ex.
+searchInput.addEventListener('keyup', displayMatches);
+//then go back to displayMatches() and use findMatches() 
+
+
 </script>
 </body>
 </html>

@@ -7,10 +7,14 @@
 <body>
   <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
 
+<!--WHEN YOU USE A CSS VAR YOU CAN UPDATE THAT VAR ON ANY ELEMENT, AND ANY SELECTORS THAT ARE INSIDE THAT ELEMENT
+ THAT REFERENCE THAT VAR WILL BE USING IT; you can also scope them to use on a specific div-->
+
   <div class="controls">
     <label for="spacing">Spacing:</label>
     <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
-
+    <!-- data-  is an attribute you can create as long as it has a dash, allows you to put everything in a nice tidy object
+    see below when access console.log(this.dataset)-->
     <label for="blur">Blur:</label>
     <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
 
@@ -21,6 +25,21 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
+    :root {
+      --base: #fffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .h1 {
+      color: var(--base);
+    }
 
     /*
       misc styles, nothing to do with CSS variables
@@ -45,6 +64,18 @@
   </style>
 
   <script>
+    const inputs = document.querySelectorAll('.controls input');
+
+    function handleUpdate() {
+      // console.log(this.value);
+      // console.log(this.dataset); will show all the attributes of the object, i.e. sizing (data-sizing ="px")
+      const suffix = this.dataset.sizing || ''; //some of them dont' have sizing, hence 'OR nothing', otherwose, will say undefned
+      console.log(suffix);//will show "px" but nothing when hover over color (b/c no sizing attr applied)
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+    }
+
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
   </script>
 
 </body>
