@@ -96,6 +96,47 @@
   </div>
 
 <script>
+  const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+  // console.log(checkboxes);
+
+//save the first clicked checkbox into a var, cuz we need to know what was the last checkbox checked
+//this is for the range when you click the second one holding shift key
+//use let b/c it will be reassigned constantly
+
+let lastChecked;
+
+  function handleCheck(e) {
+    // console.log(e);
+
+    //check if they had the shift key down
+    //AND check that they are checking it
+    let inBetween = false;
+    if(e.shiftKey && this.checked) {
+      //if that condition is satisfied, do whatver
+      //loop thru every single checkbox
+      checkboxes.forEach(checkbox => {
+        console.log(checkbox);
+        if(checkbox === this || checkbox === lastChecked) {
+          inBetween =!inBetween;
+          console.log('Startin to check them inbetween!');
+        }
+
+        if (inBetween) {
+          checkbox.checked = true;
+        }
+      });
+      //look for the first one that was checked
+      //when it's a last one, it should stop
+      //create a var inBetween that loops over and tells 'false' but then stops when finds the checkbox that will
+      //start the range (set to 'true'), and then stop at the second checkbox (set to 'false' - we no longer wnat to keep checking, the range ends) 
+    }
+
+    lastChecked = this; //referencing the inpu that was last checked
+  }
+  
+  //when one of the checkboxes gets clicked or changed
+  checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));
+
 </script>
 </body>
 </html>
