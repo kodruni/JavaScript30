@@ -7,6 +7,23 @@
 </head>
 <body>
 <script>
+  const pressed = [];
+  const secretcode = 'wesbos'; //look for this word
+
+  window.addEventListener('keyup', (e) => {
+    console.log(e.key); //when they press a key, it's gonna tell us what they pressed
+    //then we gonna push it into the array pressed
+    pressed.push(e.key);
+    pressed.splice(-secretcode.length - 1, pressed.length - secretcode.length); //from the end up to 7 letter, then 
+    //trim the array to the max we need, i.e. 'wesbos'
+    //now check if the array contains the secretcode
+    if(pressed.join('').includes(secretcode)) {
+      console.log('DING DING!');
+      cornify_add();
+    }
+    console.log(pressed); //gives us an array of the keys that were pressed
+
+  })
 </script>
 </body>
 </html>

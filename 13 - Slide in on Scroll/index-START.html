@@ -43,6 +43,7 @@
   </div>
 
   <script>
+    //this helps to run checkSlide only every 20 millisec, apply this function to your checkSlide
     function debounce(func, wait = 20, immediate = true) {
       var timeout;
       return function() {
@@ -58,6 +59,31 @@
       };
     }
 
+    const sliderImages = document.querySelectorAll('.slide-in'); //select all images
+    //runs every time you scroll
+    function checkSlide(e) {
+      // console.count(e);
+      // loop over every image and figure out where it needs to be shown
+      console.log(window.scrollY); //tells you how much you scroll down (from the top)
+      //but we want to know where we are at the very bottom of our window:
+      sliderImages.forEach(sliderImage => {
+        const slideInAt = (window.scrollY + window.innerHeight) - //gives you pixel level of where you're at the bottom
+          sliderImage.height / 2; //slides through in the middle of the image
+        // console.log(slideInAt);
+        //but we also want to know where the bottom of the image, i.e. if scrolled past the image, when we scroll back up
+        const imageBottom =  sliderImage.offsetTop + sliderImage.height; //offsetTop - how far is the top of the image from the actual window and the bottom of the image
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        if(isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active');
+        }
+      });
+    } 
+    //when the window is scrolled, we gonna run checkSlide
+    window.addEventListener('scroll', debounce(checkSlide)); //this gives too manye events, check console.count(e) to see -> may cause performance issues
+    //wrap in debounce fucntion 
   </script>
 
   <style>
