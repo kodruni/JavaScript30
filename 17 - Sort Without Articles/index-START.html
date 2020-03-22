@@ -48,6 +48,25 @@
 <script>
 const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
 
+function strip(bandName) {
+  return bandName.replace(/^(a |the |an)/i, '').trim(); //use regular expression to strip articles altogether; make sure no space befor the articles
+}
+
+//once strip function works (check in console), use it sort function
+const sortedBands = bands.sort((a, b) => strip(a) > strip(b) ? 1 : -1);
+//same as:
+  // if(strip(a) > strip(b)) {
+  //   return 1;
+  // } else {
+  //   return -1;
+  // }
+
+document.querySelector('#bands').innerHTML = //take the element and set inner HTML, maps over each, returs an array (so use join, otherwise DOM invoke toString and will add commas) 
+    sortedBands
+      .map(band => `<li>${band}</li>`)
+      .join(''); //joins into one big string, rather than a bunch of strings separated by commas
+
+console.log(sortedBands);
 
 </script>
 
