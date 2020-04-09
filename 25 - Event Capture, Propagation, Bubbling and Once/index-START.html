@@ -40,8 +40,27 @@
   }
 </style>
 
-<button></button>
+<button>Button</button>
 <script>
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+
+  function logtext(e){
+    console.log(this.classList.value);
+    // console.log(this);
+    // e.stopPropagation(); //stop bubbling this event up; this in turn affects capture -> it changes to true
+  }
+
+  divs.forEach(div => div.addEventListener('click', logtext, {
+    capture: false, //false by default
+    once: true      //listens to a click once and unbinds itself so that there's no future clicks on it (helpful if you have a button), same as div.removeEventListener('click', logText, capture?: boolean)
+  }));
+
+  button.addEventListener('click', () => {
+    console.log('Click!!');
+  }, {
+    once: true //helpful when you need the user to click only once, i.e. stores
+  });
 
 </script>
 </body>
