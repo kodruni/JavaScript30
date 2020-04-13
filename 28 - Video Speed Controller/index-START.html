@@ -15,6 +15,27 @@
   </div>
 
 <script>
+   const speed = document.querySelector('.speed');
+   const bar = speed.querySelector('.speed-bar');
+   const video = document.querySelector('.flex');
+
+   speed.addEventListener('mousemove', function(e) {
+    //  console.log(e);
+    const y = e.pageY - this.offsetTop; //need this b/c we can't assume the bar is at the very top, mayb padding etc.
+    //console.log(y); once you check you'll see the bar is from 0 to 408
+    const percent = y / this.offsetHeight;
+    const min = 0.4;
+    const max = 4;
+    const height = Math.round(percent * 100) + '%';
+    const playbackRate = percent * (max - min) + min; //to offset the height: to make 100% height our max, and 0=min 
+    // console.log(height);
+    bar.style.height = height;
+    bar.textContent = playbackRate.toFixed(2) + 'x';
+    video.playbackRate = playbackRate;
+
+    // console.log(playbackRate);
+    // console.log(percent);
+   })
 </script>
 </body>
 </html>
