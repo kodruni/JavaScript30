@@ -35,6 +35,45 @@
   </div>
 
 <script>
+  const slider = document.querySelector('.items');
+  let isDown = false;//clicking or not
+  let startX;//anchor point, to know where the initial click was, before we move mouse up/down/right/left
+  let scrollLeft;
+  
+  //listeners
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+    // console.log(e.pageX); x coordinates on the page
+    startX = e.pageX - slider.offsetLeft; //to know where exactly in the containing element, not on the page
+    scrollLeft = slider.scrollLeft;
+    console.log(startX);
+  });
+
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.add('active');
+  });
+
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+    if(!isDown) return; //stop the fn from running
+    e.preventDefault(); //stops selecting any text inside of it
+    const x = e.pageX - slider.offsetLeft; //where the cursor is when you move to the left/right
+    const walk = (x - startX) * 3; //for every pixel moved, you move lider 3px too
+    // console.log(walk);
+    slider.scrollLeft = scrollLeft - walk;
+
+    // console.log(isDown);
+    // console.log('Do work!');
+    // console.count(isDown); //how many times
+  });
+
+
 </script>
 
   </body>
